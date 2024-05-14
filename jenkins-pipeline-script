@@ -1,0 +1,94 @@
+pipeline {
+    agent any
+    
+    stages {
+        stage('Git Clone') {
+            agent {
+                label 'node1'
+                label 'node2'
+            }
+            steps {
+                git branch: 'master', url: 'https://github.com/Abhay956/disney_hotstar.git'        
+            }
+        }
+
+        stage('Docker Scout FS') {
+            agent {
+                label 'node1'
+            }
+            steps {
+                sh 'docker-scout quickview fs://.'
+                sh 'docker-scout cves fs://.' 
+            }
+        }
+    
+        stage('Docker build') {
+            agent {
+                label 'node1'
+            }
+            steps {
+                sh 'docker build -t abhaypande/disney_hotstar:$BUILD_NUMBER .' 
+            }
+        }
+        
+        stage('Docker push') {
+            agent {
+                label 'node1'
+            }
+            steps {
+                script {
+                    sh 'docker push abhaypande/disney_hotstar:$BUILD_NUMBER'
+                }
+            }
+        }
+        
+        stage('Docker Scout Scan Disney_hotstar') {
+            agent {
+                label 'node1'
+            }
+            steps {
+                    sh 'docker-scout quickview abhaypande/disney_hotstar:$BUILD_NUMBER'
+                    sh 'docker-scout cves abhaypande/disney_hotstar:$BUILD_NUMBER'
+                    sh 'docker-scout recommendations abhaypande/disney_hotstar:$BUILD_NUMBER'
+            }
+        }
+        
+        stage('Modify Deployment') {
+            agent {
+                label 'node01'
+            }
+            steps {
+                script {
+                    sh "sed -i 's|image: abhaypande/nft-store|image: abhaypande/nft-store:$BUILD_NUMBER|' nft-store.yml"
+                }
+            }
+        }
+      
+    post {
+        always {
+            emailext (
+                subject: "Project1 Pipeline Status: ${BUILD_NUMBER}",
+                body: """
+                    <html>
+                        <body>
+                            <p>Build Number: ${BUILD_NUMBER}</p>
+                            <p>Build Status: ${currentBuild.currentResult}</p>
+                            <p>Check the <a href="${BUILD_URL}">console output</a>.</p>
+                        <ul>
+                            <li>Git Repository: https://github.com/Abhay956/NFT-Store.git</li>
+                            <li>Branch: main</li>
+                            <li>Trivy Scan: ${currentBuild.currentResult}</li>
+                            <li>Docker Image: abhaypande/nft-store:${BUILD_NUMBER}</li>
+                            <li>Deployment: ${currentBuild.currentResult}</li>
+                        </ul>
+                        </body>
+                    </html>
+                """,
+                to: 'abhaypande956@gmail.com',
+                from: 'jenkins@gmail.com',
+                replyTo: 'jenkins@gmail.com',
+                mimeType: 'text/html'
+            )
+        }
+    }
+}
