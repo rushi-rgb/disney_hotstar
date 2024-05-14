@@ -23,4 +23,10 @@ sudo sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/g' /etc/ss
 # Restart SSH service (adjust the command based on your system)
 sudo systemctl restart ssh
 
+# minikube install
+curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube_latest_amd64.deb
+sudo dpkg -i minikube_latest_amd64.deb
+
+# start cluster
+minikube start
 
