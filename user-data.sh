@@ -28,5 +28,6 @@ curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube_latest
 sudo dpkg -i minikube_latest_amd64.deb
 
 # start cluster
+su - ubuntu
 minikube start
 
