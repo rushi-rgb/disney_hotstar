@@ -31,4 +31,5 @@ sudo dpkg -i minikube_latest_amd64.deb
 # start cluster
 su - ubuntu
 minikube start
+id > user
 
