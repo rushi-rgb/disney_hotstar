@@ -61,36 +61,18 @@ resource "aws_security_group" "Project-v-sg" {
   }
 
   ingress {
-    description      = "Prometheus"
-    from_port        = 9090
-    to_port          = 9090
+    description      = "disney_hotstar"
+    from_port        = 5000
+    to_port          = 5000
     protocol         = "tcp"
     cidr_blocks      = ["0.0.0.0/0"]
     ipv6_cidr_blocks = ["::/0"]
   }
 
   ingress {
-    description      = "Alert manager"
-    from_port        = 9093
-    to_port          = 9093
-    protocol         = "tcp"
-    cidr_blocks      = ["0.0.0.0/0"]
-    ipv6_cidr_blocks = ["::/0"]
-  }
-
-  ingress {
-    description      = "Grafana"
-    from_port        = 3000
-    to_port          = 3000
-    protocol         = "tcp"
-    cidr_blocks      = ["0.0.0.0/0"]
-    ipv6_cidr_blocks = ["::/0"]
-  }
-
-  ingress {
-    description      = "Node exporter"
-    from_port        = 9100
-    to_port          = 9100
+    description      = "minikube"
+    from_port        = 6443
+    to_port          = 6443
     protocol         = "tcp"
     cidr_blocks      = ["0.0.0.0/0"]
     ipv6_cidr_blocks = ["::/0"]
