@@ -1,3 +1,7 @@
+provider "aws" {
+  region = "us-east-1"
+}
+
 ## VM with user data for webserver
 resource "aws_instance" "myinstance1" {
   ami                         = "ami-09040d770ffe2224f"
