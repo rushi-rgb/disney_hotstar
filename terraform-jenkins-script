@@ -15,6 +15,7 @@ pipeline {
         }
         stage('Terraform Apply') {
             steps {
+                sh 'export AWS_DEFAULT_REGION="us-east-2"'
                 withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'AWS', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
                 sh 'terraform ${action} --auto-approve'
                 }
