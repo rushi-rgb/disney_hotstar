@@ -1,6 +1,3 @@
-provider "aws" {
-  region = "us-east-1"
-}
 
 ## VM with user data for webserver
 resource "aws_instance" "myinstance1" {
