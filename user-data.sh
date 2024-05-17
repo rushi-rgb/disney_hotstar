@@ -15,7 +15,7 @@ sudo systemctl enable docker
 usermod -aG docker ubuntu 
 
 echo "edit file /root/.ssh/authorized_keys"
-echo "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIETiOrDR6lmVmAuTFhtNf/GFaHtDT22eEa8dCJy8LIBr jenkins@ip-172-31-20-149" >> /root/.ssh/authorized_keys
+echo "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGh/bRYQ7Wo9XX0zrDHE538ueOf1n8I1+K3no454tgf6 root@ip-172-31-61-61" >> /root/.ssh/authorized_keys
 
 # Edit sshd_config file
 sudo sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/g' /etc/ssh/sshd_config
