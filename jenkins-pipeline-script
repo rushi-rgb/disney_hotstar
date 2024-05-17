@@ -1,65 +1,61 @@
 pipeline {
-    agent any
-    
-    stages {
-        stage('Git Clone') {
-            agent {
-                label 'node1'
-            }
-            steps {
-                git branch: 'master', url: 'https://github.com/Abhay956/disney_hotstar.git'        
-            }
-        }
+  agent any
 
-        stage('Docker Scout FS') {
-            agent {
-                label 'node1'
-            }
-            steps {
-                sh 'docker-scout quickview fs://.'
-                sh 'docker-scout cves fs://.' 
-            }
+  stages {
+    stage('Git Clone') {
+      agent { label 'node1' }
+      steps {
+        git branch: 'master', url: 'https://github.com/Abhay956/disney_hotstar.git'
+      }
+    }
+
+    stage('Docker Scout FS') {
+      agent { label 'node1' }
+      steps {
+        withDockerRegistry(credentialsId: '9592ec00-eff6-4838-a857-5b319a5b46c4', url: 'https://index.docker.io/v1/') {
+          sh 'docker-scout quickview fs://.'
+          sh 'docker-scout cves fs://.'
         }
+      }
+    }
+
+    stage('Docker Build') {
+      agent { label 'node1' }
+      steps {
+        sh 'docker build -t abhaypande/disney-hotstar:$BUILD_NUMBER .'
+      }
+    }
+
+    stage('Docker Push') {
+      agent { label 'node1' }
+      steps {
+        withDockerRegistry(credentialsId: '9592ec00-eff6-4838-a857-5b319a5b46c4', url: 'https://index.docker.io/v1/') {
+          sh 'docker push abhaypande/disney-hotstar:$BUILD_NUMBER'
+        }
+      }
+    }
+
+    stage('Docker Scout Scan') {
+      agent { label 'node2' }
+      steps {
+        withDockerRegistry(credentialsId: '9592ec00-eff6-4838-a857-5b319a5b46c4', url: 'https://index.docker.io/v1/') {
+          sh 'docker-scout quickview abhaypande/disney-hotstar:$BUILD_NUMBER'
+          sh 'docker-scout cves abhaypande/disney-hotstar:$BUILD_NUMBER'
+          sh 'docker-scout recommendations abhaypande/disney-hotstar:$BUILD_NUMBER'
+        }
+      }
+    }
     
-        stage('Docker build') {
-            agent {
-                label 'node1'
-            }
-            steps {
-                sh 'docker build -t abhaypande/disney_hotstar:$BUILD_NUMBER .' 
-            }
+    stage('Update Deployment File') {
+      agent { label 'node1' }
+      steps {
+        withCredentials([usernamePassword(credentialsId: 'be1db0b9-cd4c-4974-abde-9c851a7f5beb', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
+          sh 'sed -i "s|image: abhaypande/disney-hotstar|image: abhaypande/disney-hotstar:$BUILD_NUMBER|" disney-hotstar.yml'
+          sh 'git add .'
+          sh 'git commit -m "update disney-hotstar"'
+          sh 'git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/Abhay956/disney_hotstar.git HEAD:master'
         }
-        
-        stage('Docker push') {
-            agent {
-                label 'node1'
-            }
-            steps {
-                script {
-                    sh 'docker push abhaypande/disney_hotstar:$BUILD_NUMBER'
-                }
-            }
-        }
-        
-        stage('Docker Scout Scan Disney_hotstar') {
-            agent {
-                label 'node1'
-            }
-            steps {
-                    sh 'docker-scout quickview abhaypande/disney_hotstar:$BUILD_NUMBER'
-                    sh 'docker-scout cves abhaypande/disney_hotstar:$BUILD_NUMBER'
-                    sh 'docker-scout recommendations abhaypande/disney_hotstar:$BUILD_NUMBER'
-            }
-        }
-        
-        stage('Modify Deployment') {
-            agent {
-                label 'node01'
-            }
-            steps {
-                script {
-                    sh "sed -i 's|image: abhaypande/nft-store|image: abhaypande/nft-store:$BUILD_NUMBER|' nft-store.yml"
-                }
-            }
-        }
+      }
+    }  
+  }
 }
