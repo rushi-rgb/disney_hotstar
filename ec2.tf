@@ -9,7 +9,7 @@ resource "aws_instance" "myinstance1" {
   vpc_security_group_ids      = [aws_security_group.Project-v-sg.id]
   user_data                   = base64encode(file("user-data.sh"))
   tags = {
-    Name = "Project V"
+    Name = "Disney-hotstar"
   }
   root_block_device {
     volume_size = "20"  # Size in GB
