@@ -19,7 +19,7 @@ spec:
         app: dep1
     spec:
       containers:
-      - image: abhaypande/disney-hotstar
+      - image: abhaypande/disney-hotstar:4
         name: disney-hotstar-container
 ---
 ---
