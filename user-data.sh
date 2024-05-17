@@ -23,3 +23,7 @@ sudo sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/g' /etc/ss
 
 # Restart SSH service (adjust the command based on your system)
 sudo systemctl restart ssh
+
+# Docker scout install
+curl -sSfL https://raw.githubusercontent.com/docker/scout-cli/main/install.sh | sh -s -- -b /usr/local/bin
+
