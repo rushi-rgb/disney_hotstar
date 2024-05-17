@@ -2,25 +2,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  creationTimestamp: null
   labels:
-    app: dep1
-  name: disney-hotstar
+    app: disney
+  name: disney
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: dep1
-  strategy: {}
+      app: disney
   template:
     metadata:
-      creationTimestamp: null
       labels:
-        app: dep1
+        app: disney
     spec:
       containers:
-      - image: abhaypande/disney-hotstar:4
-        name: disney-hotstar-container
+      - name: disney-container
+        image: abhaypande/disney-hotstar
 ---
 ---
 apiVersion: v1
