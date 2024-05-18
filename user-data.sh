@@ -2,9 +2,11 @@
 
 # Update the package list and upgrade the installed packages
 sudo apt-get update -y
+sudo yum update 
 
 # Install OpenJDK headless without recommended packages
 sudo apt install -y --no-install-recommends openjdk-17-jdk-headless
+sudo yum install java-17-openjdk -y
 
 # Install Docker
 sudo apt-get install -y docker.io
