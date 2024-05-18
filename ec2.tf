@@ -1,7 +1,7 @@
 
 ## VM with user data for webserver
 resource "aws_instance" "myinstance1" {
-  ami                         = "ami-09040d770ffe2224f"
+  ami                         = "ami-0d77c9d87c7e619f9 "
   instance_type               = "t2.medium"
   key_name                    = var.myvar1
   associate_public_ip_address = true
