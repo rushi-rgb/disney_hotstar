@@ -10,6 +10,7 @@ sudo yum install java-17-openjdk -y
 
 # Install Docker
 sudo apt-get install -y docker.io
+sudo yum install docker -y
 
 # Start the Docker service
 sudo systemctl start docker
